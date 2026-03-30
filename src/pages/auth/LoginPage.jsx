@@ -4,10 +4,14 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useNavigate } from 'react-router-dom'
 import { Rocket } from 'lucide-react'
-import { login } from '../../services/auth.service'
-import useAuthStore from '../../store/auth.store'
-import { Button, Input } from '../../components/ui'
-import { appConfig } from '../../config/navigation'
+import { login } from '@/services/auth.service'
+import useAuthStore from '@/store/auth.store'
+import { Button } from '@/components/ui/Button'
+import { Input } from '@/components/ui/Input'
+import { Label } from '@/components/ui/label'
+import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '@/components/ui/Card'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { appConfig } from '@/config/navigation'
 
 const schema = z.object({
   email: z.string().min(1, 'Login is required'),
@@ -36,52 +40,67 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="w-full max-w-[380px] rounded-xl border bg-card p-8 shadow-sm">
-      <div className="mb-8 flex flex-col items-center text-center">
-        <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
-          <Rocket className="h-5 w-5" />
-        </div>
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">Welcome back</h1>
-        <p className="mt-1.5 text-sm text-muted-foreground">Sign in to {appConfig.name}</p>
-      </div>
-
-      {error && (
-        <div className="mb-6 rounded-md bg-red-50 border border-red-200 p-3 text-sm font-medium text-red-700">
-          {error}
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <Input
-          label="Email"
-          {...register('email')}
-          error={errors.email?.message}
-        />
-        <div>
-          <div className="flex items-center justify-between mb-1.5">
-            <label className="text-sm font-medium leading-none text-foreground">Password</label>
-            <a href="#" className="text-xs font-medium text-primary hover:underline underline-offset-4">
-              Forgot password?
-            </a>
+    <Card className="w-full max-w-[380px] shadow-sm">
+      <CardHeader className="text-center pb-2">
+        <div className="mb-4 flex justify-center">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
+            <Rocket className="h-5 w-5" />
           </div>
-          <Input
-            type="password"
-            {...register('password')}
-            error={errors.password?.message}
-          />
         </div>
+        <CardTitle className="text-xl">Welcome back</CardTitle>
+        <CardDescription>Sign in to {appConfig.name}</CardDescription>
+      </CardHeader>
 
-        <Button type="submit" disabled={isSubmitting} className="w-full mt-2">
-          {isSubmitting ? 'Signing in...' : 'Sign in'}
-        </Button>
-      </form>
+      <CardContent>
+        {error && (
+          <Alert variant="destructive" className="mb-6">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
 
-      <div className="mt-6 text-center text-sm text-muted-foreground">
-        Don't have an account?{' '}
-        <a href="#" className="font-medium text-primary hover:underline underline-offset-4">
-          Apply for access
-        </a>
-      </div>
-    </div>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div className="space-y-1.5">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              {...register('email')}
+              className={errors.email ? 'border-destructive focus-visible:ring-destructive' : ''}
+            />
+            {errors.email && (
+              <p className="text-xs font-medium text-destructive">{errors.email.message}</p>
+            )}
+          </div>
+
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="password">Password</Label>
+              <a href="#" className="text-xs font-medium text-primary hover:underline underline-offset-4">
+                Forgot password?
+              </a>
+            </div>
+            <Input
+              id="password"
+              type="password"
+              {...register('password')}
+              className={errors.password ? 'border-destructive focus-visible:ring-destructive' : ''}
+            />
+            {errors.password && (
+              <p className="text-xs font-medium text-destructive">{errors.password.message}</p>
+            )}
+          </div>
+
+          <Button type="submit" disabled={isSubmitting} className="w-full mt-2">
+            {isSubmitting ? 'Signing in...' : 'Sign in'}
+          </Button>
+        </form>
+
+        <div className="mt-6 text-center text-sm text-muted-foreground">
+          Don't have an account?{' '}
+          <a href="#" className="font-medium text-primary hover:underline underline-offset-4">
+            Apply for access
+          </a>
+        </div>
+      </CardContent>
+    </Card>
   )
 }

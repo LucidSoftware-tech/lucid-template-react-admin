@@ -4,14 +4,24 @@
  * This is a complete example of a form page that your generator
  * can copy and adapt for any entity. It uses:
  * - React Hook Form with Zod validation
- * - Input/Button UI primitives
+ * - shadcn Input, Label, Button, Card, Select primitives
  * - React Query mutation hooks
  */
 import { useNavigate, useParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Button, Input, Card, CardContent } from '../../../components/ui'
+import { Button } from '@/components/ui/Button'
+import { Input } from '@/components/ui/Input'
+import { Label } from '@/components/ui/label'
+import { Card, CardContent } from '@/components/ui/Card'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { useUser, useCreateUser, useUpdateUser } from '../hooks/useUsers'
 import { useEffect } from 'react'
 
@@ -34,11 +44,15 @@ export default function UserFormPage() {
     register,
     handleSubmit,
     reset,
+    setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(userSchema),
     defaultValues: { name: '', email: '', role: '' },
   })
+
+  const currentRole = watch('role')
 
   useEffect(() => {
     if (user) reset(user)
@@ -65,25 +79,52 @@ export default function UserFormPage() {
       </div>
 
       <Card className="max-w-lg">
-        <CardContent className="pt-5">
+        <CardContent className="pt-6">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <Input
-              label="Full Name"
-              {...register('name')}
-              error={errors.name?.message}
-            />
-            <Input
-              label="Email"
-              type="email"
-              {...register('email')}
-              error={errors.email?.message}
-            />
-            <Input
-              label="Role"
-              {...register('role')}
-              error={errors.role?.message}
-              placeholder="e.g. admin, editor, viewer"
-            />
+            <div className="space-y-1.5">
+              <Label htmlFor="name">Full Name</Label>
+              <Input
+                id="name"
+                {...register('name')}
+                className={errors.name ? 'border-destructive focus-visible:ring-destructive' : ''}
+              />
+              {errors.name && (
+                <p className="text-xs font-medium text-destructive">{errors.name.message}</p>
+              )}
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                {...register('email')}
+                className={errors.email ? 'border-destructive focus-visible:ring-destructive' : ''}
+              />
+              {errors.email && (
+                <p className="text-xs font-medium text-destructive">{errors.email.message}</p>
+              )}
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="role">Role</Label>
+              <Select
+                value={currentRole}
+                onValueChange={(val) => setValue('role', val, { shouldValidate: true })}
+              >
+                <SelectTrigger className={errors.role ? 'border-destructive focus:ring-destructive' : ''}>
+                  <SelectValue placeholder="Select a role" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="admin">Admin</SelectItem>
+                  <SelectItem value="editor">Editor</SelectItem>
+                  <SelectItem value="viewer">Viewer</SelectItem>
+                </SelectContent>
+              </Select>
+              {errors.role && (
+                <p className="text-xs font-medium text-destructive">{errors.role.message}</p>
+              )}
+            </div>
 
             <div className="flex items-center gap-3 pt-2">
               <Button type="submit" disabled={isSubmitting}>

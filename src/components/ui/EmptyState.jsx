@@ -1,4 +1,4 @@
-import { cn } from '../../utils/cn'
+import { cn } from '@/lib/utils'
 import { Inbox } from 'lucide-react'
 
 export default function EmptyState({ title = 'No data', description, icon: Icon = Inbox, className }) {

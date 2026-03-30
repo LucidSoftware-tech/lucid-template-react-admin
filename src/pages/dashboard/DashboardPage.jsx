@@ -1,5 +1,5 @@
-import { appConfig } from '../../config/navigation'
-import { Card, CardContent } from '../../components/ui'
+import { appConfig } from '@/config/navigation'
+import { Card, CardContent } from '@/components/ui/Card'
 
 export default function DashboardPage() {
   return (
@@ -13,7 +13,7 @@ export default function DashboardPage() {
         {/* Generator will replace these placeholder cards with real metrics */}
         {['Total Users', 'Active Sessions', 'Revenue', 'Growth'].map((label) => (
           <Card key={label}>
-            <CardContent className="pt-5">
+            <CardContent className="pt-6">
               <div className="text-xs text-muted-foreground font-medium">{label}</div>
               <div className="text-2xl font-bold tracking-tight mt-1">—</div>
             </CardContent>

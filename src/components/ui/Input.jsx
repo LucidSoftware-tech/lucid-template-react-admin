@@ -1,35 +1,19 @@
-import { forwardRef } from 'react'
-import { cn } from '../../utils/cn'
+import * as React from "react"
 
-const Input = forwardRef(({ className, label, error, icon: Icon, ...props }, ref) => {
+import { cn } from "@/lib/utils"
+
+const Input = React.forwardRef(({ className, type, ...props }, ref) => {
   return (
-    <div className="space-y-1.5">
-      {label && (
-        <label className="text-sm font-medium leading-none text-foreground">
-          {label}
-        </label>
+    <input
+      type={type}
+      className={cn(
+        "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+        className
       )}
-      <div className="relative">
-        {Icon && (
-          <Icon className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-        )}
-        <input
-          ref={ref}
-          className={cn(
-            'flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50',
-            Icon && 'pl-9',
-            error && 'border-red-500 focus-visible:ring-red-500',
-            className
-          )}
-          {...props}
-        />
-      </div>
-      {error && (
-        <p className="text-xs font-medium text-red-500">{error}</p>
-      )}
-    </div>
-  )
+      ref={ref}
+      {...props} />
+  );
 })
+Input.displayName = "Input"
 
-Input.displayName = 'Input'
-export default Input
+export { Input }

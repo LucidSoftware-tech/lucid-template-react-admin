@@ -1,10 +1,18 @@
-import { cn } from '../../utils/cn'
-import { Loader2 } from 'lucide-react'
+import { Loader2Icon } from "lucide-react"
 
-export default function Spinner({ size = 'md', className }) {
-  const sizes = { sm: 'h-4 w-4', md: 'h-6 w-6', lg: 'h-8 w-8' }
+import { cn } from "@/lib/utils"
 
+function Spinner({
+  className,
+  ...props
+}) {
   return (
-    <Loader2 className={cn('animate-spin text-primary', sizes[size], className)} />
-  )
+    <Loader2Icon
+      role="status"
+      aria-label="Loading"
+      className={cn("size-4 animate-spin", className)}
+      {...props} />
+  );
 }
+
+export { Spinner }
